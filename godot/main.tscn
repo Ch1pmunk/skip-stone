@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://22mp6kgcswpp"]
+
+[ext_resource type="Script" uid="uid://bkphahmc0c7vq" path="res://particle_control.gd" id="1_ig7tw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kpn2d"]
+radius = 20.0
+
+[sub_resource type="Gradient" id="Gradient_7dm0k"]
+offsets = PackedFloat32Array(0.5903614, 0.6787149, 0.686747, 0.69076306)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 0.4814813, 0.4814813, 0.4814813, 0.5185187, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7dm0k"]
+gradient = SubResource("Gradient_7dm0k")
+width = 40
+height = 40
+fill = 1
+fill_from = Vector2(0.48115942, 0.48985508)
+
+[sub_resource type="Gradient" id="Gradient_ig7tw"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_lquwl"]
+gradient = SubResource("Gradient_ig7tw")
+
+[sub_resource type="Curve" id="Curve_0xm2m"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.49773753, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_1bvp3"]
+curve = SubResource("Curve_0xm2m")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ig7tw"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_1bvp3")
+color_ramp = SubResource("GradientTexture1D_lquwl")
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_kpn2d"]
+a = Vector2(-200000, 0)
+b = Vector2(400000, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ig7tw"]
+size = Vector2(800000, 400)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qssas"]
+radius = 90.0
+
+[node name="GameManager" type="GameManager" unique_id=825244263]
+
+[node name="Bg" type="Node2D" parent="." unique_id=888991947]
+position = Vector2(640, 360)
+
+[node name="Far" type="Parallax2D" parent="Bg" unique_id=1825594436]
+scroll_scale = Vector2(0.1, 0.1)
+
+[node name="Label" type="Label" parent="Bg/Far" unique_id=515655974]
+offset_left = -123.0
+offset_top = -311.0
+offset_right = 117.0
+offset_bottom = -244.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 48
+text = "拖拽那个球"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Near" type="Parallax2D" parent="Bg" unique_id=1260027924]
+scroll_scale = Vector2(0.2, 0.2)
+
+[node name="Label" type="Label" parent="Bg/Near" unique_id=1307660502]
+offset_left = -110.0
+offset_top = -211.0
+offset_right = 106.0
+offset_bottom = -161.0
+theme_override_colors/font_color = Color(0.33333334, 0.33333334, 0.33333334, 1)
+theme_override_font_sizes/font_size = 36
+text = "松手即可发射"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Ball" type="Ball" parent="." unique_id=1531890336]
+position = Vector2(471, 269)
+collision_layer = 5
+collision_mask = 6
+freeze = true
+freeze_mode = 1
+contact_monitor = true
+max_contacts_reported = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball" unique_id=2121897693]
+shape = SubResource("CircleShape2D_kpn2d")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Ball" unique_id=289734745]
+show_behind_parent = true
+amount = 10
+texture = SubResource("GradientTexture2D_7dm0k")
+lifetime = 0.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_ig7tw")
+script = ExtResource("1_ig7tw")
+
+[node name="Water" type="Water" parent="." unique_id=1135031217]
+position = Vector2(640, 600)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Water" unique_id=425222090]
+shape = SubResource("SegmentShape2D_kpn2d")
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1669638355 groups=["ground"]]
+position = Vector2(640, 720)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=989327763]
+position = Vector2(0, 200)
+shape = SubResource("RectangleShape2D_ig7tw")
+
+[node name="Line2D" type="Line2D" parent="Ground" unique_id=207851806]
+points = PackedVector2Array(-200000, 0, 400000, 0)
+default_color = Color(0, 0, 0, 1)
+
+[node name="Aim" type="Aim" parent="." unique_id=759506474]
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Aim" unique_id=530374635]
+position = Vector2(320, 480)
+shape = SubResource("CircleShape2D_qssas")
+
+[node name="Line2D" type="Line2D" parent="Aim" unique_id=801695170]
+width = 4.0
+default_color = Color(0, 0, 0, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=127590682]
+position = Vector2(640, 360)
